@@ -1,5 +1,7 @@
 package com.interview.leah.slacklist.model;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,11 +34,15 @@ public class UserModel {
         // If they're not in memory, load it from disk.
         if (users == null) {
             users = User.listAll(User.class);
+            Log.d("Leah", "User length = " + users.size());
         }
         return users;
     }
 
     public void parseJson(JSONArray userArray) {
+        // Our data is invalid at this point.  Wipe it and replace
+        User.deleteAll(User.class);
+        Profile.deleteAll(Profile.class);
         for (int i = 0; i < userArray.length(); i++) {
             try {
                 if (users == null) {

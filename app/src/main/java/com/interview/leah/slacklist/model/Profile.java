@@ -1,6 +1,7 @@
 package com.interview.leah.slacklist.model;
 
 import com.orm.SugarRecord;
+import com.orm.dsl.Table;
 
 import org.json.JSONObject;
 
@@ -11,6 +12,7 @@ import org.json.JSONObject;
  * Out of scope:
  * Anything that's not storing profile data.
  */
+@Table
 public class Profile extends SugarRecord {
     public String firstName;
     public String lastName;

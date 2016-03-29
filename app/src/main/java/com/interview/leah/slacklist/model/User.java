@@ -40,9 +40,11 @@ public class User extends SugarRecord {
         returnUser.isOwner = userObject.optBoolean("is_owner");
         returnUser.has2fa = userObject.optBoolean("has_2fa");
         returnUser.hasFiles = userObject.optBoolean("has_files");
-        returnUser.profile = Profile.fromJson(userObject.optJSONObject("profile"));
-        returnUser.profileId = returnUser.profile.getId();
-        save(returnUser);
+//        if (User.find(User.class, "user_id = ?", returnUser.userId).isEmpty()) {
+            returnUser.profile = Profile.fromJson(userObject.optJSONObject("profile"));
+            returnUser.profileId = returnUser.profile.getId();
+            save(returnUser);
+//        }
         return returnUser;
     }
     public Profile getProfile() {
