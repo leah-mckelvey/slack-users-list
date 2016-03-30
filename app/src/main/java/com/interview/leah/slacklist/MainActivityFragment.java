@@ -1,14 +1,13 @@
 package com.interview.leah.slacklist;
 
 import android.app.ListFragment;
+import android.content.Intent;
 import android.database.DataSetObserver;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
@@ -23,7 +22,7 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends ListFragment {
+public class MainActivityFragment extends ListFragment implements AdapterView.OnItemClickListener {
     private List<User> users;
     private ImageLoader loader;
 
@@ -64,7 +63,7 @@ public class MainActivityFragment extends ListFragment {
 
             @Override
             public void registerDataSetObserver(DataSetObserver observer) {
-//                UserModel.getInstance().registerObserver(observer);
+                UserModel.getInstance().registerObserver(observer);
             }
 
             @Override
@@ -124,10 +123,18 @@ public class MainActivityFragment extends ListFragment {
             }
         };
         setListAdapter(adapter);
+        getListView().setOnItemClickListener(this);
     }
 
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
+        Intent intent = new Intent(getActivity(), ProfileActivity.class);
+        intent.putExtra("id", position);
+        startActivity(intent);
     }
 }
