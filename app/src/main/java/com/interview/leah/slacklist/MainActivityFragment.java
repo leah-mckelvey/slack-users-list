@@ -99,11 +99,11 @@ public class MainActivityFragment extends ListFragment implements AdapterView.On
                     convertView = inflater.inflate(R.layout.item_user, parent, false);
                 }
                 NetworkImageView imageView = (NetworkImageView) convertView.findViewById(R.id.profileThumbnail);
-                imageView.setImageUrl(users.get(position).getProfile().image_24, loader);
+                imageView.setImageUrl(users.get(position).getProfile().getImage_24(), loader);
                 TextView firstNameTextView = (TextView) convertView.findViewById(R.id.firstName);
-                firstNameTextView.setText(users.get(position).getProfile().firstName);
+                firstNameTextView.setText(users.get(position).getProfile().getFirstName());
                 TextView lastNameTextView = (TextView) convertView.findViewById(R.id.lastName);
-                lastNameTextView.setText(users.get(position).getProfile().lastName);
+                lastNameTextView.setText(users.get(position).getProfile().getLastName());
                 return convertView;
             }
 

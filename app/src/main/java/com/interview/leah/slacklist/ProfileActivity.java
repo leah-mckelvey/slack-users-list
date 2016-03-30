@@ -22,11 +22,11 @@ public class ProfileActivity extends ActionBarActivity {
         int id = getIntent().getIntExtra("id", 0);
         User user = UserModel.getInstance().getUsers().get(id);
         NetworkImageView profileImageView = (NetworkImageView) findViewById(R.id.profileImageView);
-        profileImageView.setImageUrl(user.getProfile().image_72, ((UserListApplication) getApplication()).getImageLoader());
+        profileImageView.setImageUrl(user.getProfile().getImage_72(), ((UserListApplication) getApplication()).getImageLoader());
         TextView userNameView = (TextView) findViewById(R.id.realname);
-        userNameView.setText(user.getProfile().realName);
+        userNameView.setText(user.getProfile().getRealName());
         TextView titleView = (TextView) findViewById(R.id.title);
-        titleView.setText(user.getProfile().title);
+        titleView.setText(user.getProfile().getTitle());
 
     }
 }

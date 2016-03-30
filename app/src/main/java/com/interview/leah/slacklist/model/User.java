@@ -40,15 +40,15 @@ public class User extends SugarRecord {
         returnUser.isOwner = userObject.optBoolean("is_owner");
         returnUser.has2fa = userObject.optBoolean("has_2fa");
         returnUser.hasFiles = userObject.optBoolean("has_files");
-//        if (User.find(User.class, "user_id = ?", returnUser.userId).isEmpty()) {
         returnUser.profile = Profile.fromJson(userObject.optJSONObject("profile"));
-        returnUser.profileId = returnUser.profile.getId();
-//        }
         return returnUser;
     }
 
     public void persist() {
-        save(profile);
+        //Weird hack that violates the immutable rule.  At the same time, there's no way to have the profileId before the profile itself is persisted.
+        profile.persist();
+        profileId = profile.getId();
+        Profile tempProfile = Profile.findById(Profile.class, profileId);
         save(this);
     }
     public Profile getProfile() {
