@@ -1,6 +1,7 @@
 package com.interview.leah.slacklist.model;
 
-import android.util.Log;
+import android.database.DataSetObservable;
+import android.database.DataSetObserver;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,7 +22,7 @@ import java.util.List;
  */
 public class UserModel {
     private List<User> users;
-    private List<DataListener> listeners = new ArrayList<>();
+    private DataSetObservable observable = new DataSetObservable();
     private static UserModel instance = new UserModel();
     public static UserModel getInstance(){
         return instance;
@@ -34,7 +35,7 @@ public class UserModel {
         // If they're not in memory, load it from disk.
         if (users == null) {
             users = User.listAll(User.class);
-            Log.d("Leah", "User length = " + users.size());
+            observable.notifyChanged();
         }
         return users;
     }
@@ -43,11 +44,9 @@ public class UserModel {
         // Our data is invalid at this point.  Wipe it and replace
         User.deleteAll(User.class);
         Profile.deleteAll(Profile.class);
+        users = new ArrayList<>();
         for (int i = 0; i < userArray.length(); i++) {
             try {
-                if (users == null) {
-                    users = new ArrayList<>();
-                }
                 JSONObject userObject = (JSONObject) userArray.get(i);
                 User user = User.fromJson(userObject);
                 if (!users.contains(user)) {
@@ -57,16 +56,10 @@ public class UserModel {
                 return;
             }
         }
-        notifyDataChanged();
+        observable.notifyChanged();
     }
 
-    private void notifyDataChanged() {
-        for (DataListener listener : listeners) {
-            listener.onDataChanged();
-        }
-    }
-
-    public interface DataListener {
-        void onDataChanged();
+    public void registerObserver(DataSetObserver observer) {
+        observable.registerObserver(observer);
     }
 }
