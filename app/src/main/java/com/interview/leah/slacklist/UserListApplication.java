@@ -2,6 +2,7 @@ package com.interview.leah.slacklist;
 
 import android.app.Application;
 
+import com.android.volley.toolbox.ImageLoader;
 import com.interview.leah.slacklist.api.RequestManager;
 import com.interview.leah.slacklist.model.UserModel;
 import com.orm.SugarContext;
@@ -42,5 +43,9 @@ public class UserListApplication extends Application {
     public void onTerminate() {
         super.onTerminate();
         SugarContext.terminate();
+    }
+
+    public ImageLoader getImageLoader() {
+        return requestManager.getImageLoader();
     }
 }

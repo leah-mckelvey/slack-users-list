@@ -12,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.interview.leah.slacklist.model.User;
 import com.interview.leah.slacklist.model.UserModel;
 
@@ -23,6 +25,7 @@ import java.util.List;
  */
 public class MainActivityFragment extends ListFragment {
     private List<User> users;
+    private ImageLoader loader;
 
     public MainActivityFragment() {
     }
@@ -46,6 +49,7 @@ public class MainActivityFragment extends ListFragment {
             }
         });
         users = UserModel.getInstance().getUsers();
+        loader = ((UserListApplication) getActivity().getApplication()).getImageLoader();
 
         ListAdapter adapter = new ListAdapter() {
             @Override
@@ -95,6 +99,8 @@ public class MainActivityFragment extends ListFragment {
                     LayoutInflater inflater = getActivity().getLayoutInflater();
                     convertView = inflater.inflate(R.layout.item_user, parent, false);
                 }
+                NetworkImageView imageView = (NetworkImageView) convertView.findViewById(R.id.profileThumbnail);
+                imageView.setImageUrl(users.get(position).getProfile().image_24, loader);
                 TextView firstNameTextView = (TextView) convertView.findViewById(R.id.firstName);
                 firstNameTextView.setText(users.get(position).getProfile().firstName);
                 TextView lastNameTextView = (TextView) convertView.findViewById(R.id.lastName);

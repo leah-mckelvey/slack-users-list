@@ -1,11 +1,14 @@
 package com.interview.leah.slacklist.api;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.Nullable;
+import android.util.LruCache;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -32,9 +35,22 @@ public class RequestManager {
     private final List<RequestListener> listeners = new ArrayList<>();
 
     private final RequestQueue queue;
+    private final ImageLoader loader;
 
     public RequestManager(Context context) {
         this.queue = Volley.newRequestQueue(context);
+        this.loader = new ImageLoader(this.queue, new ImageLoader.ImageCache() {
+            private final LruCache<String, Bitmap> mCache = new LruCache<String, Bitmap>(10);
+            @Override
+            public Bitmap getBitmap(String s) {
+                return mCache.get(s);
+            }
+
+            @Override
+            public void putBitmap(String s, Bitmap bitmap) {
+                mCache.put(s, bitmap);
+            }
+        });
     }
 
     public void sendRequest(String url) {
@@ -75,5 +91,9 @@ public class RequestManager {
     public interface RequestListener {
         void onSuccess(JSONArray users);
         void onFailure();
+    }
+
+    public ImageLoader getImageLoader() {
+        return this.loader;
     }
 }
