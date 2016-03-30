@@ -1,0 +1,37 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1348\cocoasubrtf170
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid1\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid2\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li1440\lin1440 }{\listname ;}\listid1}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\fs24 \cf0 Overview:\
+There are 3 main components for this app.\
+\pard\tx220\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\fi-720\pardirnatural
+\ls1\ilvl0\cf0 {\listtext	1.	}Network/API:  This is handled by RequestManager.  Both grabbing the initial JSON data and the subsequent image fetches are routed through here.\
+\pard\tx940\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li1440\fi-1440\pardirnatural
+\ls1\ilvl1\cf0 {\listtext	\uc0\u8259 	}Uses Volley library.  I chose this library because it\'92s simple to use and it\'92s quite fast.  It\'92s very conceivable I could have used the library without this wrapper, but I wanted to organize the networking code into one place.\
+\pard\tx220\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\fi-720\pardirnatural
+\ls1\ilvl0\cf0 {\listtext	2.	}Persistance/SQL:  This is handled by the UserModel, User, and Profile objects.  The User and Profile objects save themselves to the disk, whereas the UserModel consolidates where to grab the entire list, as well as managing the state of that list\'97grabbing from memory and receiving the input of the networking calls.\
+\pard\tx940\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li1440\fi-1440\pardirnatural
+\ls1\ilvl1\cf0 {\listtext	\uc0\u8259 	}Uses Sugar ORM library.  I chose this library because it sped up implementation of SQL management.  This was recommended to me by someone I met in an android engineering meetup group.  I will note something odd I found with it is it hasn\'92t quite achieved the the elegance with 1:1 relational mapping that it has with the rest of its implementation.  This is stated clearly on their website.\
+\pard\tx220\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\fi-720\pardirnatural
+\ls1\ilvl0\cf0 {\listtext	3.	}  UI Management.  This is all the activities and fragments.  Most of this is just using standard android hooks and grabbing the data from the data model, though it does also interact with the request manager when grabbing images.  This is arguably the messier part of the code.  Were I to clean up some more, I\'92d probably make an external adapter class.  I might also throw some more polish into it\'97just maybe have a friend or two help me out aesthetically to make it look nice.  Though honestly, I\'92ve always found it easier when someone draws up a screen shot I can just imitate.\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \
+Things I loved about the project:\
+	I loved how it was a complete test of all the major app writing parts.  Network interaction, disk persistence, UI, all the major components were there.  I got a good sense of what I\'92d be working on\'97this felt like a genuine facsimile of the sort of challenge I\'92d see if I worked at slack.\
+\
+Things I loved about my implementation:\
+	I managed to keep all but one class under 100 lines, and not terribly difficult to read.  The one class that was over was still under 150, and could easily be abstracted to under 100 by pulling out the adapter.  I consider this to be a win because the bigger a class, the higher the hurtle is to understanding what it does.\
+	Low mess factor:  I wrote specs on the top of all my non-ui classes.  This helped keep their purpose clear so overreach was minimal.  \
+	No re-inventing the wheel:  Generally if there was a third party tool to make my life easier, I used it.  Furthermore, I picked the ones easily integrated with a line in the build.gradle file.\
+\
+Things that could have been better:\
+	The networking stuff I would have preferred to keep only interacting with the model, which the ui pulled from.  There was a bit of deviation from MVC when I grabbed the application class to grab an imagecacher from the request manager.  This is preferable to making it a singleton and grabbing it directly, but it adds an additional assumption placed on the base application class that hurts maintainability.  For more reading on why this bothers me, I reference {\field{\*\fldinst{HYPERLINK "http://www.joelonsoftware.com/articles/APIWar.html"}}{\fldrslt http://www.joelonsoftware.com/articles/APIWar.html}}.  Here you can see Maxis made an invalid assumption about the underlying memory management system in DOS which failed to be true in WINDOWS 3.0, and it hurt the maintainability of Windows.  The analogy being, I\'92m assuming that getApplication() returns an instance of UserListApplication.  If I ever change that, it\'92s going to break that code, and it shouldn\'92t.  That said, given that it\'92s not shrinkware and no file formats depend on it, it\'92s a somewhat reversible decision, so I left it as is.\
+	UI polish:  Aside from looking somewhat default, some aspects of the ui seem like they could be cleaner.  The adapter could have been pulled into its own class as stated above.  There could have been a waiting screen in the case of not having data on file from a previous launch.  Some of the names of the UI elements could have been clearer and maybe more consistent.\
+	For the life of me, I couldn\'92t find the user_name in the JSON blob anywhere.  Though that would have been an easy fix.\
+	Whatever my coding mentor has to say :D\
+\
+I had fun working on this\'97I did a lot of infrastructure work, streaming, and low level OS hacking as my re-entry into the coding world.  I haven\'92t actually written an app since Gree days back in 2014.  It was fun to bang one out!  Thanks for the opportunity.  I\'92m also using this as fodder for my continual coding education with a friend of mine from MIT.  So however this interview shakes out, I feel a net positive!}
