@@ -41,11 +41,15 @@ public class User extends SugarRecord {
         returnUser.has2fa = userObject.optBoolean("has_2fa");
         returnUser.hasFiles = userObject.optBoolean("has_files");
 //        if (User.find(User.class, "user_id = ?", returnUser.userId).isEmpty()) {
-            returnUser.profile = Profile.fromJson(userObject.optJSONObject("profile"));
-            returnUser.profileId = returnUser.profile.getId();
-            save(returnUser);
+        returnUser.profile = Profile.fromJson(userObject.optJSONObject("profile"));
+        returnUser.profileId = returnUser.profile.getId();
 //        }
         return returnUser;
+    }
+
+    public void persist() {
+        save(profile);
+        save(this);
     }
     public Profile getProfile() {
         if (profile == null) {

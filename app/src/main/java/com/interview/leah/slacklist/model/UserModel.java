@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -27,7 +28,7 @@ public class UserModel {
     public static UserModel getInstance(){
         return instance;
     }
-    public UserModel() {
+    private UserModel() {
 
     }
 
@@ -37,10 +38,10 @@ public class UserModel {
             users = User.listAll(User.class);
             observable.notifyChanged();
         }
-        return users;
+        return Collections.unmodifiableList(users);
     }
 
-    public void parseJson(JSONArray userArray) {
+    public void parseJsonAndPersist(JSONArray userArray) {
         // Our data is invalid at this point.  Wipe it and replace
         User.deleteAll(User.class);
         Profile.deleteAll(Profile.class);
@@ -56,7 +57,14 @@ public class UserModel {
                 return;
             }
         }
+        persist();
         observable.notifyChanged();
+    }
+
+    private void persist() {
+        for (User user : users) {
+            user.persist();
+        }
     }
 
     public void registerObserver(DataSetObserver observer) {

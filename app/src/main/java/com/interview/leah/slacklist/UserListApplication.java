@@ -27,7 +27,7 @@ public class UserListApplication extends Application {
         requestManager.addRequestListener(new RequestManager.RequestListener() {
             @Override
             public void onSuccess(JSONArray users) {
-                UserModel.getInstance().parseJson(users);
+                UserModel.getInstance().parseJsonAndPersist(users);
             }
 
             @Override
